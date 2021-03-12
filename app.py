@@ -1,10 +1,12 @@
 import sqlite3
 import datetime
+import json
 
-from flask import Flask
+from flask import Flask, Response
 
 app = Flask(__name__)
 
+# TODO get commission data
 SQL_SELECT_REPORT_FOR_DATE = """
     WITH order_totals AS (
         SELECT order_id, SUM(order_lines.total_amount) AS order_total FROM order_lines GROUP BY order_id
@@ -32,7 +34,7 @@ SQL_SELECT_REPORT_FOR_DATE = """
         order_totals.order_id = orders.id  AND
         date(orders.created_at) = ? AND
         commissions.date = date(orders.created_at) AND
-        commissions_per_order.date = ?
+        commissions_per_order.date = date(orders.created_at)
 """
 
 
@@ -41,18 +43,22 @@ def report(date):
     con = sqlite3.connect('ecomm.db')
     cur = con.cursor()
 
-    breakpoint()
-
     try:
-        date = datetime.date.fromisoformat(date)
+        # TODO better way of ensuring date format
+        datetime.date.fromisoformat(date)
     except ValueError:
         # TODO logging
-        return
+        return Response("Invalid date", status=400)
 
-    results = cur.execute(SQL_SELECT_REPORT_FOR_DATE, date)
-    breakpoint()
+    row = cur.execute(SQL_SELECT_REPORT_FOR_DATE, (date,)).fetchone()
+    field_names = [description[0] for description in cur.description]
 
-    return results.fetchall()
+    results = [i for i in zip(field_names, row)]
+
+    return Response(
+        json.dumps(dict(results)),
+        content_type='application/json'  # TODO how to set this automatically
+    )
 
 
 if __name__ == '__main__':
