@@ -7,3 +7,6 @@ loadfixtures:
 .PHONY: test
 test:
 	python3 -m pytest test
+
+run:
+	python3 app.py
