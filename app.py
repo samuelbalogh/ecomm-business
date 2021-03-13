@@ -29,7 +29,7 @@ SQL_SELECT_REPORT_FOR_DATE = """
         AVG(order_lines.discount_rate) AS discount_rate_avg,
         AVG(order_totals.order_total) AS order_total_avg,
         SUM(commissions.rate) AS total_commission,
-        commissions_per_order.commission_per_order AS order_average
+        commissions_per_order.commission_per_order AS commission_per_order_avg
     FROM
         orders, order_lines, order_totals, commissions, commissions_per_order
     WHERE
