@@ -2,9 +2,9 @@
 
 ## Summary
 
-The project uses a `sqlite` database file for storing and querying the data, Flask for handling requests. It does basic error handling and some unit testing.
-I've opted for a pure SQL solution as opposed to an ORM for the sake of simplicity.
-The advantages of an ORM would be evident if some more flexible querying was to be introduced.
+The project uses a `sqlite` database file for storing and querying the data, Flask for handling requests.   
+It does basic error handling and some unit testing.  
+I've opted for a pure SQL solution as opposed to using an ORM or the SqlAlchemy expression language for the sake of simplicity. A raw SQL solution might seem prone to SQL injection, but if it's used with the `?` placeholder, the DB-API makes sure that the parameters are safe.
 
 ## Shortcomings
 
